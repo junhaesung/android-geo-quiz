@@ -4,27 +4,22 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 
 /**
  * @see https://stackoverflow.com/a/60205538
  */
 class QuizActivity : AppCompatActivity() {
+    private lateinit var mTrueButton: Button
+    private lateinit var mFalseButton: Button
+    private lateinit var mPreviousButton: Button
+    private lateinit var mNextButton: Button
+    private lateinit var mQuestionTextView: TextView
 
-    val mQuestions = listOf(
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas, true),
-        Question(R.string.question_asia, true),
-    )
-
-    lateinit var mTrueButton: Button
-    lateinit var mFalseButton: Button
-    lateinit var mPreviousButton: Button
-    lateinit var mNextButton: Button
-    lateinit var mQuestionTextView: TextView
-    private var mCurrentIndex = 0
+    private val mQuizViewModel: QuizViewModel by lazy {
+        ViewModelProvider(this).get(QuizViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,15 +38,12 @@ class QuizActivity : AppCompatActivity() {
         }
         mPreviousButton = findViewById(R.id.previous_button)
         mPreviousButton.setOnClickListener {
-            mCurrentIndex -= 1
-            mCurrentIndex += mQuestions.size
-            mCurrentIndex %= mQuestions.size
+            mQuizViewModel.prev()
             updateQuestion()
         }
         mNextButton = findViewById(R.id.next_button)
         mNextButton.setOnClickListener {
-            mCurrentIndex += 1
-            mCurrentIndex %= mQuestions.size
+            mQuizViewModel.next()
             updateQuestion()
         }
 
@@ -59,12 +51,11 @@ class QuizActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion() {
-        mQuestionTextView.setText(mQuestions[mCurrentIndex].mTextResId)
+        mQuestionTextView.setText(mQuizViewModel.getQuestionResourceId())
     }
 
     private fun checkAnswer(userPressedTrue: Boolean) {
-        val answerIsTrue = mQuestions[mCurrentIndex].mAnswerTrue
-        val messageResId = if (userPressedTrue == answerIsTrue) {
+        val messageResId = if (userPressedTrue == mQuizViewModel.isAnswerTrue()) {
             R.string.correct_toast
         } else {
             R.string.incorrect_toast
