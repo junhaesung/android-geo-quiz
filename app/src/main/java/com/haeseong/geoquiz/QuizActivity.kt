@@ -34,19 +34,11 @@ class QuizActivity : AppCompatActivity() {
 
         mTrueButton = findViewById(R.id.true_button)
         mTrueButton.setOnClickListener {
-            Snackbar.make(
-                findViewById(R.id.quiz_activity),
-                R.string.correct_toast,
-                Snackbar.LENGTH_SHORT,
-            ).show()
+            checkAnswer(true)
         }
         mFalseButton = findViewById(R.id.false_button)
         mFalseButton.setOnClickListener {
-            Snackbar.make(
-                findViewById(R.id.quiz_activity),
-                R.string.incorrect_toast,
-                Snackbar.LENGTH_SHORT,
-            ).show()
+            checkAnswer(false)
         }
         mNextButton = findViewById(R.id.next_button)
         mNextButton.setOnClickListener {
@@ -60,5 +52,19 @@ class QuizActivity : AppCompatActivity() {
 
     private fun updateQuestion() {
         mQuestionTextView.setText(mQuestions[mCurrentIndex].mTextResId)
+    }
+
+    private fun checkAnswer(userPressedTrue: Boolean) {
+        val answerIsTrue = mQuestions[mCurrentIndex].mAnswerTrue
+        val messageResId = if (userPressedTrue == answerIsTrue) {
+            R.string.correct_toast
+        } else {
+            R.string.incorrect_toast
+        }
+        Snackbar.make(
+            findViewById(R.id.quiz_activity),
+            messageResId,
+            Snackbar.LENGTH_SHORT,
+        ).show()
     }
 }
