@@ -2,6 +2,7 @@ package com.haeseong.geoquiz
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -13,8 +14,8 @@ import com.google.android.material.snackbar.Snackbar
 class QuizActivity : AppCompatActivity() {
     private lateinit var mTrueButton: Button
     private lateinit var mFalseButton: Button
-    private lateinit var mPreviousButton: Button
-    private lateinit var mNextButton: Button
+    private lateinit var mPreviousButton: ImageButton
+    private lateinit var mNextButton: ImageButton
     private lateinit var mQuestionTextView: TextView
 
     private val mQuizViewModel: QuizViewModel by lazy {
